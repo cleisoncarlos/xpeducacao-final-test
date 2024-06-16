@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  node-app:
+    container_name: node-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/mydatabase
+    depends_on:
+      - db
+  db:
+    container_name: postgres-db
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data # Mapeia o volume para a raiz da aplicação
+
+volumes:
+  postgres-data: # Define o volume para persistir os dados
